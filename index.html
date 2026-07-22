@@ -7,6 +7,16 @@
     <!-- Tailwind CSS Script -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @media (max-width: 768px) {
+    /* Sesuaikan nama class kursor di file aslimu kalau beda */
+    .custom-cursor, #cursor, .cursor-dot {
+        display: none !important;
+    }
+    /* Bikin wadah tema turun ke bawah kalau di HP */
+    .theme-container, .flex {
+        flex-wrap: wrap !important;
+    }
+}
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
         
         body {
@@ -1134,7 +1144,7 @@
             const namaInput = document.getElementById('input-nama').value;
             const pesanInput = document.getElementById('input-pesan').value;
 
-            fetch('https://web-portofolio-production-8a15.up.railway.app', {
+            fetch('https://web-portofolio-production-8a15.up.railway.app/api/projects', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nama: namaInput, pesan: pesanInput })
