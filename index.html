@@ -1134,7 +1134,7 @@
             const namaInput = document.getElementById('input-nama').value;
             const pesanInput = document.getElementById('input-pesan').value;
 
-            fetch('http://localhost:3000/api/guestbook', {
+            fetch('https://web-portofolio-production-8a15.up.railway.app', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nama: namaInput, pesan: pesanInput })
