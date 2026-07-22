@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Ahmad Nabil Fiddin</title>
+    <!-- Tailwind CSS Script -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            cursor: none;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* CUSTOM CURSOR FOLLOWER */
+        #custom-cursor {
+            pointer-events: none;
+            transition: transform 0.1s ease-out, background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        /* DYNAMIC THEME COLOR VARIABLES (DEFAULT: CELESTIA INDIGO) */
+        :root {
+            --primary-rgb: 99, 102, 241;   /* Indigo-500 */
+            --accent-rgb: 168, 85, 247;   /* Purple-500 */
+            --primary-hex: #6366f1;
+        }
+
+        .theme-celestia { --primary-rgb: 99, 102, 241; --accent-rgb: 168, 85, 247; --primary-hex: #6366f1; }
+        .theme-matrix { --primary-rgb: 34, 197, 94; --accent-rgb: 16, 185, 129; --primary-hex: #22c55e; }
+        .theme-nordic { --primary-rgb: 6, 182, 212; --accent-rgb: 59, 130, 246; --primary-hex: #06b6d4; }
+        .theme-synthwave { --primary-rgb: 236, 72, 153; --accent-rgb: 245, 158, 11; --primary-hex: #ec4899; }
+
+        /* DYNAMIC GLASSMORPHISM CARD */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.6);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(var(--primary-rgb), 0.5);
+            box-shadow: 0 20px 50px rgba(var(--primary-rgb), 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* HYPRLAND GRAB EFFECT */
+        .grabbing-active {
+            box-shadow: 0 0 40px rgba(var(--primary-rgb), 0.4) !important;
+            border-color: rgba(var(--primary-rgb), 0.8) !important;
+            transition: none !important;
+        }
+
+        .dynamic-text-primary { color: rgb(var(--primary-rgb)); }
+        .dynamic-border-primary { border-color: rgba(var(--primary-rgb), 0.6); }
+        .dynamic-bg-primary { background-color: rgb(var(--primary-rgb)); }
+
+        /* CYBER GRID ANIMATION */
+        .cyber-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        /* CASSETTE ROTATION ANIMATION */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 4s linear infinite;
+        }
+        .animation-paused {
+            animation-play-state: paused !important;
+        }
+
+        /* SCROLL REVEAL */
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-active {
+            opacity: 1 !important;
+            transform: translateX(0) !important;
+        }
+
+        /* TOAST NOTIFICATION */
+        .toast-enter {
+            transform: translateY(100px);
+            opacity: 0;
+        }
+        .toast-show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* CUSTOM RANGE INPUT STYLING */
+        input[type="range"] {
+            accent-color: rgb(var(--primary-rgb));
+        }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen selection:bg-indigo-500 selection:text-white overflow-x-hidden relative cyber-grid theme-celestia">
+
+    <!-- NORMAL MODERN LOADING SCREEN -->
+    <div id="loading-screen" class="fixed inset-0 z-[99999] bg-gray-950 flex flex-col items-center justify-center transition-opacity duration-700 pointer-events-auto">
+        <div class="relative w-16 h-16 mb-4">
+            <div class="absolute inset-0 rounded-full border-2 border-white/10"></div>
+            <div class="absolute inset-0 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin"></div>
+        </div>
+        <p class="text-xs font-mono text-gray-400 tracking-widest uppercase">Loading Portfolio...</p>
+    </div>
+
+    <!-- CUSTOM CURSOR FOLLOWER -->
+    <div id="custom-cursor" class="fixed top-0 left-0 w-6 h-6 rounded-full border-2 border-indigo-400 bg-indigo-500/20 z-[9999] -translate-x-1/2 -translate-y-1/2 pointer-events-none shadow-[0_0_15px_rgba(129,140,248,0.6)]"></div>
+
+    <!-- BACKGROUND AMBIENT GLOW MESH GRADIENT -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div id="glow-1" class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-[120px] transition-all duration-500"></div>
+        <div id="glow-2" class="absolute top-1/2 -right-40 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px] transition-all duration-500"></div>
+        <div id="glow-3" class="absolute -bottom-40 left-1/3 w-96 h-96 bg-pink-600/15 rounded-full blur-[120px] transition-all duration-500"></div>
+    </div>
+
+    <!-- INTERACTIVE BACKGROUND PARTICLES CANVAS -->
+    <canvas id="bg-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+
+    <!-- MATRIX RAIN CANVAS -->
+    <canvas id="matrix-canvas" class="fixed inset-0 pointer-events-none z-40 hidden opacity-80"></canvas>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- AUDIO PLAYER UTAMA -->
+    <audio id="audio-player" src="lagu-favorit.mp3" crossorigin="anonymous"></audio>
+
+    <!-- PROJECT DETAIL MODAL POPUP -->
+    <div id="project-modal" class="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4 hidden transition-all duration-300">
+        <div class="glass-card rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative space-y-4 border border-white/10">
+            <button id="close-modal" class="absolute top-5 right-5 text-gray-400 hover:text-white font-mono text-xl transition">✕</button>
+            <span id="modal-tech-tag" class="text-[10px] font-mono bg-gray-900 dynamic-text-primary dynamic-border-primary border px-3 py-1 rounded-full uppercase tracking-wider">Project Details</span>
+            <h3 id="modal-title" class="text-2xl font-extrabold text-white pt-1 tracking-tight">...</h3>
+            <p id="modal-desc" class="text-gray-300 text-sm leading-relaxed">...</p>
+            <div id="modal-tech-list" class="flex flex-wrap gap-2 pt-2"></div>
+            <div class="pt-4 flex flex-col sm:flex-row gap-3">
+                <button onclick="showToast('Live Demo feature ready to connect!', 'info')" class="flex-1 dynamic-bg-primary hover:opacity-90 text-white font-bold py-2.5 rounded-xl text-xs font-mono transition shadow-lg">🚀 Launch Demo</button>
+                <button onclick="showToast('Local repository ready to publish!', 'info')" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold py-2.5 rounded-xl text-xs font-mono transition border border-gray-700">💻 View Code</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="relative z-10 w-full px-4 lg:px-12 py-8">
+
+        <!-- LIVE THEME SWITCHER BAR -->
+        <div class="mb-6 flex flex-wrap items-center justify-between gap-4 bg-gray-900/60 backdrop-blur-xl p-4 rounded-2xl border border-white/10">
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-mono font-bold text-gray-300">🎨 SELECT ACCENT THEME:</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="switchTheme('celestia')" class="px-3 py-1 rounded-lg bg-indigo-950/80 border border-indigo-500 text-indigo-300 text-xs font-mono hover:scale-105 transition flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> Celestia
+                </button>
+                <button onclick="switchTheme('matrix')" class="px-3 py-1 rounded-lg bg-emerald-950/80 border border-emerald-500 text-emerald-300 text-xs font-mono hover:scale-105 transition flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Matrix
+                </button>
+                <button onclick="switchTheme('nordic')" class="px-3 py-1 rounded-lg bg-cyan-950/80 border border-cyan-500 text-cyan-300 text-xs font-mono hover:scale-105 transition flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> Nordic
+                </button>
+                <button onclick="switchTheme('synthwave')" class="px-3 py-1 rounded-lg bg-pink-950/80 border border-pink-500 text-pink-300 text-xs font-mono hover:scale-105 transition flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-pink-500"></span> Synthwave
+                </button>
+            </div>
+        </div>
+
+        <!-- HERO HEADER SECTION -->
+        <header class="py-12 border-b border-white/5 bg-gray-950/40 backdrop-blur-md reveal-left relative rounded-3xl mb-10 px-4">
+            <!-- BACKEND STATUS INDICATOR -->
+            <div class="static sm:absolute sm:top-6 sm:right-6 flex justify-center mb-4 sm:mb-0">
+                <div class="inline-flex items-center gap-2.5 bg-gray-900/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10 text-[11px] font-mono shadow-inner">
+                    <span id="api-status-dot" class="w-2.5 h-2.5 rounded-full bg-yellow-500 animate-pulse"></span>
+                    <span id="api-status-text" class="text-gray-400">Checking API...</span>
+                </div>
+            </div>
+
+            <div class="w-full flex flex-col items-center text-center space-y-6">
+                <!-- AVAILABILITY STATUS BADGE -->
+                <div class="inline-flex items-center gap-2 bg-emerald-950/60 border border-emerald-800/60 px-4 py-1.5 rounded-full text-emerald-400 text-xs font-mono shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>Available for Projects // Sidoarjo, Indonesia</span>
+                </div>
+
+                <!-- PROFILE PICTURE -->
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full blur opacity-60 group-hover:opacity-100 transition duration-500 animate-pulse"></div>
+                    <div class="relative w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-2 border-white/20 bg-gray-900 shadow-2xl">
+                        <img src="foto-profil.jpeg" alt="Ahmad Nabil Fiddin Profile Picture" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                
+                <!-- NAME & TYPING ROLE -->
+                <div class="space-y-2">
+                    <h1 class="text-3xl sm:text-5xl lg:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-indigo-400 to-purple-400 tracking-tight uppercase">AHMAD NABIL FIDDIN</h1>
+                    <p class="dynamic-text-primary font-mono text-xs sm:text-base font-semibold h-6">
+                        > <span id="typing-text"></span><span class="animate-pulse">|</span>
+                    </p>
+                </div>
+
+                <!-- QUICK ACTION BUTTONS -->
+                <div class="flex flex-wrap items-center justify-center gap-3 pt-1">
+                    <button onclick="showToast('Contact info copied to clipboard!', 'success')" class="dynamic-bg-primary hover:opacity-90 text-white font-mono text-xs px-4 py-2.5 rounded-xl border border-white/10 transition shadow-lg flex items-center gap-2">
+                        <span>💬 Contact Me</span>
+                    </button>
+                    <a href="#guestbook-form" class="bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-mono text-xs px-4 py-2.5 rounded-xl border border-white/10 transition flex items-center gap-2">
+                        <span>✍️ Sign Guestbook</span>
+                    </a>
+                    <button onclick="showToast('Architecting Hyprland & Node.js backend', 'info')" class="bg-gray-900/80 hover:bg-gray-800 text-purple-400 font-mono text-xs px-3.5 py-2.5 rounded-xl border border-white/10 transition">
+                        ⚡ Arch Linux Riced
+                    </button>
+                </div>
+
+                <!-- SUMMARY STATISTICS COUNTER -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-2xl pt-4 border-t border-white/5">
+                    <div class="bg-black/40 p-3 rounded-2xl border border-white/5 text-center">
+                        <p class="text-lg font-black dynamic-text-primary font-mono">10+</p>
+                        <p class="text-[10px] text-gray-400 font-mono uppercase">Projects Built</p>
+                    </div>
+                    <div class="bg-black/40 p-3 rounded-2xl border border-white/5 text-center">
+                        <p class="text-lg font-black text-purple-400 font-mono">X RPL 1</p>
+                        <p class="text-[10px] text-gray-400 font-mono uppercase">SMK Krian 1</p>
+                    </div>
+                    <div class="bg-black/40 p-3 rounded-2xl border border-white/5 text-center">
+                        <p class="text-lg font-black text-emerald-400 font-mono">Axioo ACP</p>
+                        <p class="text-[10px] text-gray-400 font-mono uppercase">Program Level</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- DASHBOARD GRID SYSTEM -->
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+            
+            <!-- LEFT COLUMN (5/12 WIDTH): TERMINAL & MUSIC PLAYER -->
+            <div class="lg:col-span-5 space-y-8">
+                
+                <!-- TERMINAL CONSOLE WINDOW -->
+                <section id="window-terminal" class="glass-card rounded-2xl border border-green-500/30 shadow-[0_0_30px_rgba(34,197,94,0.1)] overflow-hidden font-mono reveal-left z-10 relative bg-gray-950">
+                    <!-- DRAG HANDLE -->
+                    <div id="handle-terminal" title="Drag to float! (Terminal)" class="bg-black/80 hover:bg-green-950/40 px-4 md:px-5 py-3 border-b border-green-900/50 flex items-center justify-between cursor-grab active:cursor-grabbing transition-colors">
+                        <div class="flex items-center gap-2 pointer-events-none">
+                            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                            <span class="text-xs text-green-400/90 ml-2 font-bold tracking-wide">nabil@archlinux:~ (zsh)</span>
+                        </div>
+                        <span class="text-[10px] text-green-600 font-bold uppercase tracking-widest hidden sm:inline pointer-events-none">Terminal v3.0</span>
+                    </div>
+
+                    <div id="terminal-output" class="p-4 md:p-5 h-72 overflow-y-auto text-xs sm:text-sm text-green-400 space-y-2 terminal-scroll bg-black/80 backdrop-blur-md">
+                        <p class="text-gray-500">// Welcome to Arch Linux Shell Terminal.</p>
+                        <p class="text-gray-500">// Window Manager Mode: <span class="text-indigo-400 font-bold">HYPRLAND FLOATING</span> enabled.</p>
+                        <p class="text-gray-500">// Tip: You can DRAG the headers of these cards!</p>
+                        <p class="text-gray-500">// Type <span class="text-yellow-400 font-bold">help</span> to view available commands.</p>
+                    </div>
+
+                    <form id="terminal-form" class="p-3.5 bg-black/90 border-t border-green-900/50 flex items-center gap-2">
+                        <span class="text-green-500 font-bold text-xs sm:text-sm">root@arch:~#</span>
+                        <input type="text" id="terminal-input" autocomplete="off" placeholder="type help..." class="bg-transparent text-green-300 w-full focus:outline-none font-mono text-xs sm:text-sm">
+                    </form>
+                </section>
+
+                <!-- VINTAGE CASSETTE MUSIC WIDGET -->
+                <section id="window-music" class="glass-card p-6 rounded-3xl reveal-left z-10 relative bg-gray-950">
+                    <!-- DRAG HANDLE -->
+                    <h2 id="handle-music" title="Drag to float! (Audio Player)" class="text-lg font-extrabold text-gray-200 mb-6 flex items-center justify-between border-b border-white/5 pb-4 tracking-tight cursor-grab active:cursor-grabbing hover:text-indigo-300 transition-colors">
+                        <span class="pointer-events-none">📻 Now Playing</span>
+                        <span class="text-[10px] font-mono dynamic-text-primary uppercase tracking-widest pointer-events-none">[STRELIZIA MIXTAPE]</span>
+                    </h2>
+                    
+                    <div class="flex flex-col items-center gap-6">
+                        <!-- CASSETTE TAPE BUTTON -->
+                        <button id="btn-kaset" class="relative w-full max-w-[280px] h-44 bg-amber-800 rounded-xl p-3 shadow-2xl border-4 border-amber-900 flex flex-col justify-between overflow-hidden ring-4 ring-black/40 bg-gradient-to-br from-amber-700 to-amber-900 text-left transition duration-300 hover:scale-105 active:scale-95 group focus:outline-none mx-auto">
+                            <div class="absolute inset-x-0 top-1/2 h-1 bg-amber-950/40"></div>
+                            
+                            <div class="w-full bg-gray-100 text-gray-900 px-3 py-1.5 rounded border border-amber-950 text-center shadow-inner relative z-10">
+                                <p class="text-[10px] font-black tracking-widest text-amber-900 uppercase">STRELIZIA MIXTAPE</p>
+                                <p id="kaset-text" class="text-[9px] font-mono font-bold text-gray-600 mt-0.5 truncate">Avenged Sevenfold - Tension</p>
+                            </div>
+                            
+                            <div class="w-full bg-gray-950 h-12 rounded-md border-2 border-amber-950 mx-auto flex items-center justify-between px-6 relative z-10 shadow-inner">
+                                <div id="roda-kiri" class="w-7 h-7 rounded-full border-4 border-dashed border-gray-600 flex items-center justify-center animate-spin-slow animation-paused bg-gray-900">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-gray-950"></div>
+                                </div>
+                                <div class="w-10 h-5 bg-amber-900/30 rounded border border-amber-950/50 shadow-inner"></div>
+                                <div id="roda-kanan" class="w-7 h-7 rounded-full border-4 border-dashed border-gray-600 flex items-center justify-center animate-spin-slow animation-paused bg-gray-900">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-gray-950"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="w-full flex justify-center gap-4 text-[8px] font-mono font-bold text-amber-950/70 relative z-10">
+                                <span>CLICK TO PLAY / PAUSE</span>
+                                <span>NR SYSTEM</span>
+                            </div>
+                        </button>
+
+                        <!-- PLAYLIST CONTROLS & SELECTOR (SVG ICONS) -->
+                        <div class="w-full space-y-3">
+                            <div class="flex items-center justify-between gap-2 bg-black/40 p-2 rounded-2xl border border-white/5">
+                                <button id="btn-prev" title="Previous Track" class="px-3 py-1.5 bg-gray-900/90 hover:bg-gray-800 text-gray-300 hover:text-indigo-400 rounded-xl font-mono text-xs transition-all duration-200 border border-white/10 hover:border-indigo-500/50 flex items-center gap-1.5 group shadow-sm active:scale-95">
+                                    <svg class="w-3.5 h-3.5 fill-current transition-transform group-hover:-translate-x-0.5" viewBox="0 0 24 24">
+                                        <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                                    </svg>
+                                    <span>PREV</span>
+                                </button>
+
+                                <select id="playlist-select" aria-label="Playlist Selection" title="Select Track" class="bg-gray-900/90 border border-white/10 text-xs font-mono text-indigo-300 rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-indigo-500/80 flex-1 truncate text-center cursor-pointer hover:border-white/20 transition">
+                                    <option value="" disabled selected>Select Track...</option>
+                                </select>
+
+                                <button id="btn-next" title="Next Track" class="px-3 py-1.5 bg-gray-900/90 hover:bg-gray-800 text-gray-300 hover:text-indigo-400 rounded-xl font-mono text-xs transition-all duration-200 border border-white/10 hover:border-indigo-500/50 flex items-center gap-1.5 group shadow-sm active:scale-95">
+                                    <span>NEXT</span>
+                                    <svg class="w-3.5 h-3.5 fill-current transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24">
+                                        <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="text-center pointer-events-none">
+                                <h3 id="lagu-judul" class="text-xl font-extrabold dynamic-text-primary">Tension</h3>
+                                <p id="lagu-artist" class="text-sm text-gray-300 font-medium">Avenged Sevenfold</p>
+                                <p id="lagu-story" class="text-xs text-gray-400 mt-1.5 leading-relaxed">"An absolute banger track to keep the focus high while ricing Arch Linux or debugging JavaScript code."</p>
+                            </div>
+
+                            <!-- AUDIO PROGRESS BAR & VOLUME CONTROL -->
+                            <div class="space-y-2 bg-black/40 p-3 rounded-2xl border border-white/5 font-mono text-xs">
+                                <div class="flex items-center justify-between text-[10px] text-gray-400">
+                                    <span id="current-time">0:00</span>
+                                    <input type="range" id="seek-bar" value="0" min="0" max="100" aria-label="Audio Seekbar" class="w-full mx-3 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer" />
+                                    <span id="duration-time">0:00</span>
+                                </div>
+                                <div class="flex items-center justify-between text-[10px] text-gray-400 pt-1">
+                                    <span>🔊 Volume:</span>
+                                    <input type="range" id="volume-bar" value="100" min="0" max="100" aria-label="Volume Control" class="w-28 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer" />
+                                </div>
+                            </div>
+
+                            <!-- REAL CANVAS AUDIO VISUALIZER -->
+                            <div class="bg-black/60 p-3 rounded-2xl border border-white/10 w-full overflow-hidden pointer-events-none">
+                                <canvas id="visualizer-canvas" class="w-full h-16 rounded-xl block"></canvas>
+                            </div>
+
+                            <div class="pt-1 text-center">
+                                <span id="music-status" class="inline-block bg-black/40 text-gray-400 text-xs px-3 py-1 rounded-full border border-white/10 font-mono transition-all duration-300">
+                                    Status: Paused ⏸️
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- RIGHT COLUMN (7/12 WIDTH): ABOUT ME, PROJECTS, & GUESTBOOK -->
+            <div class="lg:col-span-7 space-y-8">
+                
+                <!-- PROFILE WINDOW -->
+                <section id="window-profile" class="glass-card p-6 md:p-8 rounded-3xl reveal-right space-y-6 z-10 relative bg-gray-950">
+                    <h2 id="handle-profile" title="Drag to float! (Profile Info)" class="text-lg md:text-xl font-extrabold text-gray-200 flex items-center justify-between border-b border-white/5 pb-4 tracking-tight cursor-grab active:cursor-grabbing hover:text-indigo-300 transition-colors">
+                        <span class="pointer-events-none">👤 Profile & Skills</span>
+                        <span class="text-[10px] font-mono text-purple-400 uppercase tracking-widest pointer-events-none">[STACK]</span>
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-300 pointer-events-none">
+                        <div class="bg-black/30 p-3.5 rounded-2xl border border-white/5">
+                            <span class="dynamic-text-primary font-semibold font-mono text-xs block mb-1">Full Name:</span> 
+                            <span class="font-medium text-gray-200">Ahmad Nabil Fiddin</span>
+                        </div>
+                        <div class="bg-black/30 p-3.5 rounded-2xl border border-white/5">
+                            <span class="dynamic-text-primary font-semibold font-mono text-xs block mb-1">Date of Birth:</span> 
+                            <span class="font-medium text-gray-200">December 31, 2009</span>
+                        </div>
+                        <div class="bg-black/30 p-3.5 rounded-2xl border border-white/5 sm:col-span-2">
+                            <span class="dynamic-text-primary font-semibold font-mono text-xs block mb-1">Education:</span> 
+                            <span class="font-medium text-gray-200">SMK Krian 1 (Software Engineering)</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 pointer-events-none">
+                        <p class="text-xs font-mono text-gray-400 uppercase tracking-wider mb-3">// TECH & HARDWARE SKILLS:</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-indigo-950/80 text-indigo-300 border border-indigo-700/60 px-3 py-1 rounded-full text-xs font-mono transition duration-300 hover:shadow-[0_0_15px_rgba(99,102,241,0.6)]">JavaScript ES6</span>
+                            <span class="bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 px-3 py-1 rounded-full text-xs font-mono transition duration-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.6)]">ExpressJS / Node</span>
+                            <span class="bg-cyan-950/80 text-cyan-300 border border-cyan-700/60 px-3 py-1 rounded-full text-xs font-mono transition duration-300 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)]">Tailwind CSS</span>
+                            <span class="bg-purple-950/80 text-purple-300 border border-purple-700/60 px-3 py-1 rounded-full text-xs font-mono transition duration-300 hover:shadow-[0_0_15px_rgba(168,85,247,0.6)]">Arch Linux / Hyprland</span>
+                            <span class="bg-amber-950/80 text-amber-300 border border-amber-700/60 px-3 py-1 rounded-full text-xs font-mono transition duration-300 hover:shadow-[0_0_15px_rgba(245,158,11,0.6)]">Axioo ACP Fundamental</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PORTFOLIO PROJECTS SECTION -->
+                <section class="reveal-right space-y-4">
+                    <div class="flex justify-between items-end border-b border-white/5 pb-3">
+                        <h2 class="text-lg md:text-xl font-extrabold text-gray-200 tracking-tight">🚀 Featured Projects</h2>
+                        <span class="text-xs font-mono text-gray-400">(Click for details)</span>
+                    </div>
+                    <div id="project-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <p class="text-gray-500 font-mono text-xs">Loading project data...</p>
+                    </div>
+                </section>
+
+                <!-- GUESTBOOK WINDOW -->
+                <section id="window-guestbook" class="glass-card p-6 md:p-8 rounded-3xl space-y-6 reveal-right z-10 relative bg-gray-950">
+                    <h2 id="handle-guestbook" title="Drag to float! (Guestbook)" class="text-lg md:text-xl font-extrabold text-gray-200 flex items-center justify-between border-b border-white/5 pb-4 tracking-tight cursor-grab active:cursor-grabbing hover:text-emerald-400 transition-colors">
+                        <span class="pointer-events-none">💬 Guestbook</span>
+                        <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-widest pointer-events-none">[LIVE CONNECTED]</span>
+                    </h2>
+                    
+                    <form id="guestbook-form" class="bg-black/50 p-4 md:p-5 rounded-2xl border border-white/10 space-y-4 shadow-inner">
+                        <p class="text-xs font-mono dynamic-text-primary">$ nabil-terminal --send-message</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input type="text" id="input-nama" placeholder="Your Name..." required class="bg-black/60 border border-white/10 text-white rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-indigo-500 font-mono transition">
+                            <input type="text" id="input-pesan" placeholder="Write your message..." required class="bg-black/60 border border-white/10 text-white rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-indigo-500 font-mono transition">
+                        </div>
+                        <button type="submit" class="w-full dynamic-bg-primary hover:opacity-90 text-white font-bold py-2.5 px-4 rounded-xl transition duration-300 shadow-lg text-xs font-mono">
+                            [ Enter ] Send Message 🚀
+                        </button>
+                    </form>
+
+                    <div class="space-y-3 pt-1">
+                        <h3 class="text-xs font-mono text-gray-400 uppercase tracking-widest">Recent Messages:</h3>
+                        <div id="guestbook-list" class="space-y-2.5 max-h-52 overflow-y-auto pr-2 terminal-scroll">
+                            <p class="text-gray-500 font-mono text-xs">Loading messages...</p>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+        </main>
+        
+        <!-- FOOTER -->
+        <footer class="py-8 text-center text-xs font-mono text-gray-500 border-t border-white/5 mt-12">
+            <p>© 2026 <span class="dynamic-text-primary font-bold">Ahmad Nabil Fiddin</span>. Crafted with ExpressJS & TailwindCSS.</p>
+        </footer>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 0. NORMAL MODERN LOADING SCREEN DISMISS
+        window.addEventListener('load', () => {
+            const loadingScreen = document.getElementById('loading-screen');
+            setTimeout(() => {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.remove();
+                }, 700);
+            }, 600);
+        });
+
+        // 1. CUSTOM CURSOR & 3D TILT EFFECT
+        const cursor = document.getElementById('custom-cursor');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = `${e.clientX}px`;
+            cursor.style.top = `${e.clientY}px`;
+            cursor.style.opacity = '1';
+        });
+
+        document.addEventListener('mouseover', (e) => {
+            const isInteractive = e.target.closest('button, input, select, a, .glass-card, [onclick], #handle-terminal, #handle-music, #handle-profile, #handle-guestbook');
+            if (isInteractive) {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.6)';
+                cursor.style.backgroundColor = 'rgba(99, 102, 241, 0.3)';
+                cursor.style.borderColor = '#818cf8';
+            } else {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursor.style.backgroundColor = 'rgba(99, 102, 241, 0.2)';
+                cursor.style.borderColor = '#a5b4fc';
+            }
+        });
+
+        document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
+        document.addEventListener('mouseenter', () => { cursor.style.opacity = '1'; });
+
+        // 3D CARD TILT
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                if(card.classList.contains('grabbing-active')) return;
+
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -5;
+                const rotateY = ((x - centerX) / centerX) * 5;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                if(card.classList.contains('grabbing-active')) return;
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            });
+        });
+
+        // HERO TYPING EFFECT
+        const typingText = document.getElementById('typing-text');
+        const roles = ["Full-Stack Developer", "Student @ SMK Krian 1", "Arch Linux Ricer", "Guitarist @ Strelizia"];
+        let roleIdx = 0, charIdx = 0, isDeleting = false;
+
+        function typeEffect() {
+            const currentRole = roles[roleIdx];
+            if (isDeleting) {
+                typingText.innerText = currentRole.substring(0, charIdx--);
+            } else {
+                typingText.innerText = currentRole.substring(0, charIdx++);
+            }
+
+            let speed = isDeleting ? 40 : 80;
+            if (!isDeleting && charIdx === currentRole.length + 1) {
+                speed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIdx === 0) {
+                isDeleting = false;
+                roleIdx = (roleIdx + 1) % roles.length;
+                speed = 400;
+            }
+            setTimeout(typeEffect, speed);
+        }
+        typeEffect();
+
+        // LIVE THEME SWITCHER LOGIC
+        function switchTheme(themeName) {
+            document.body.className = document.body.className.replace(/theme-\w+/g, '');
+            document.body.classList.add(`theme-${themeName}`);
+
+            const glow1 = document.getElementById('glow-1');
+            const glow2 = document.getElementById('glow-2');
+
+            if (themeName === 'matrix') {
+                glow1.className = glow1.className.replace(/bg-\w+-\d+\/\d+/, 'bg-emerald-600/20');
+                glow2.className = glow2.className.replace(/bg-\w+-\d+\/\d+/, 'bg-green-600/20');
+            } else if (themeName === 'nordic') {
+                glow1.className = glow1.className.replace(/bg-\w+-\d+\/\d+/, 'bg-cyan-600/20');
+                glow2.className = glow2.className.replace(/bg-\w+-\d+\/\d+/, 'bg-blue-600/20');
+            } else if (themeName === 'synthwave') {
+                glow1.className = glow1.className.replace(/bg-\w+-\d+\/\d+/, 'bg-pink-600/20');
+                glow2.className = glow2.className.replace(/bg-\w+-\d+\/\d+/, 'bg-amber-600/20');
+            } else {
+                glow1.className = glow1.className.replace(/bg-\w+-\d+\/\d+/, 'bg-indigo-600/20');
+                glow2.className = glow2.className.replace(/bg-\w+-\d+\/\d+/, 'bg-purple-600/20');
+            }
+
+            showToast(`Theme switched to: ${themeName.toUpperCase()}`, 'success');
+        }
+
+        // BACKGROUND PARTICLES CANVAS
+        const bgCanvas = document.getElementById('bg-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        bgCanvas.width = window.innerWidth;
+        bgCanvas.height = window.innerHeight;
+
+        let particles = [];
+        for (let i = 0; i < 45; i++) {
+            particles.push({
+                x: Math.random() * bgCanvas.width,
+                y: Math.random() * bgCanvas.height,
+                radius: Math.random() * 1.5 + 0.5,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4
+            });
+        }
+
+        function drawBgParticles() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+            bgCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            
+            particles.forEach((p, idx) => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > bgCanvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > bgCanvas.height) p.vy *= -1;
+
+                bgCtx.beginPath();
+                bgCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                bgCtx.fill();
+
+                for (let j = idx + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if (dist < 120) {
+                        bgCtx.strokeStyle = `rgba(255, 255, 255, ${0.1 - dist / 1200})`;
+                        bgCtx.lineWidth = 0.5;
+                        bgCtx.beginPath();
+                        bgCtx.moveTo(p.x, p.y);
+                        bgCtx.lineTo(p2.x, p2.y);
+                        bgCtx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(drawBgParticles);
+        }
+        drawBgParticles();
+
+        // TOAST NOTIFICATION SYSTEM
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let badgeColor = 'bg-indigo-950/90 text-indigo-300 border-indigo-700/50';
+            let prefix = '[SYSTEM]';
+
+            if (type === 'success') {
+                badgeColor = 'bg-emerald-950/90 text-emerald-400 border-emerald-800/50 shadow-[0_0_20px_rgba(16,185,129,0.2)]';
+                prefix = '[SUCCESS]';
+            } else if (type === 'music') {
+                badgeColor = 'bg-amber-950/90 text-amber-400 border-amber-800/50 shadow-[0_0_20px_rgba(245,158,11,0.2)]';
+                prefix = '[AUDIO]';
+            } else if (type === 'error') {
+                badgeColor = 'bg-rose-950/90 text-rose-400 border-rose-800/50 shadow-[0_0_20px_rgba(244,63,94,0.2)]';
+                prefix = '[ERROR]';
+            }
+
+            toast.className = `toast-enter flex items-center gap-3 px-4 py-3 rounded-2xl border text-xs font-mono backdrop-blur-xl transition-all duration-300 shadow-2xl pointer-events-auto ${badgeColor}`;
+            toast.innerHTML = `<span class="font-bold uppercase">${prefix}</span> <span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('toast-enter');
+                toast.classList.add('toast-show');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.remove('toast-show');
+                toast.classList.add('toast-enter');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // HYPRLAND FLOATING WINDOW MANAGER (DRAG LOGIC)
+        function initFloatingWM(windowId, handleId) {
+            const windowEl = document.getElementById(windowId);
+            const handleEl = document.getElementById(handleId);
+            if (!windowEl || !handleEl) return;
+
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+            windowEl.style.position = 'relative';
+            windowEl.style.top = '0px';
+            windowEl.style.left = '0px';
+
+            handleEl.onmousedown = dragMouseDown;
+
+            function dragMouseDown(e) {
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+                
+                document.querySelectorAll('.glass-card').forEach(el => el.style.zIndex = '10');
+                windowEl.style.zIndex = '50';
+                windowEl.classList.add('grabbing-active');
+                windowEl.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            }
+
+            function elementDrag(e) {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                
+                windowEl.style.top = (parseInt(windowEl.style.top || 0) - pos2) + "px";
+                windowEl.style.left = (parseInt(windowEl.style.left || 0) - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+                windowEl.classList.remove('grabbing-active');
+            }
+        }
+
+        initFloatingWM('window-terminal', 'handle-terminal');
+        initFloatingWM('window-music', 'handle-music');
+        initFloatingWM('window-profile', 'handle-profile');
+        initFloatingWM('window-guestbook', 'handle-guestbook');
+
+        // CHECK BACKEND HEALTH STATUS
+        function checkBackendStatus() {
+            const dot = document.getElementById('api-status-dot');
+            const text = document.getElementById('api-status-text');
+
+            fetch('http://localhost:3000/api/projects')
+                .then(res => {
+                    if (res.ok) {
+                        dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]";
+                        text.innerText = "BACKEND ONLINE (3000)";
+                        text.className = "text-emerald-400 font-bold";
+                    }
+                })
+                .catch(() => {
+                    dot.className = "w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)]";
+                    text.innerText = "BACKEND OFFLINE";
+                    text.className = "text-rose-400 font-bold";
+                });
+        }
+        checkBackendStatus();
+
+        // SCROLL REVEAL OBSERVER
+        const observerOptions = { threshold: 0.15 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal-active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-left, .reveal-right').forEach(el => observer.observe(el));
+
+        // PROJECT DETAIL MODAL
+        let rawProjectsData = [];
+        const modal = document.getElementById('project-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        function openModal(id) {
+            const proyek = rawProjectsData.find(p => p.id === id);
+            if (!proyek) return;
+
+            document.getElementById('modal-title').innerText = proyek.judul;
+            document.getElementById('modal-desc').innerText = proyek.deskripsi;
+            
+            const techList = document.getElementById('modal-tech-list');
+            techList.innerHTML = proyek.tech.map(t => `<span class="bg-gray-900 dynamic-text-primary text-xs px-3 py-1 rounded-full border border-white/10 font-mono">${t}</span>`).join('');
+
+            modal.classList.remove('hidden');
+            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            showToast(`Opening details: ${proyek.judul}`, 'info');
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+        });
+        modal.addEventListener('click', (e) => { 
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            }
+        });
+
+        // TERMINAL HACKER
+        const termForm = document.getElementById('terminal-form');
+        const termInput = document.getElementById('terminal-input');
+        const termOutput = document.getElementById('terminal-output');
+        const matrixCanvas = document.getElementById('matrix-canvas');
+
+        termForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const command = termInput.value.trim().toLowerCase();
+            termInput.value = '';
+
+            printToTerminal(`root@arch:~# ${command}`, 'text-white font-bold');
+
+            if (command === 'help') {
+                printToTerminal(`SHELL COMMAND LIST:\n  - bio      : Display full profile\n  - skills   : Display software & system skills\n  - band     : Strelizia Band info\n  - reset    : Reset Floating Windows layout\n  - matrix   : Toggle Matrix code rain visualizer\n  - clear    : Clear terminal screen`, 'text-yellow-400');
+                showToast('Help menu loaded', 'info');
+            } 
+            else if (command === 'reset') {
+                document.querySelectorAll('.glass-card').forEach(el => {
+                    el.style.top = '0px';
+                    el.style.left = '0px';
+                });
+                printToTerminal(`[SYSTEM] Window Manager layout reset to tiling mode!`, 'text-emerald-400 font-bold');
+                showToast('Layout Reset to default!', 'success');
+            }
+            else if (command === 'bio') {
+                printToTerminal(`[SYSTEM BIO]\nName : Ahmad Nabil Fiddin\nClass: X RPL 1 (SMK Krian 1)\nOS   : Arch Linux (Hyprland Riced)\nHobby: Playing Guitar & Web Development`, 'text-cyan-400');
+                showToast('Bio command executed', 'info');
+            } 
+            else if (command === 'skills') {
+                printToTerminal(`[SKILLS & STACK]\n> Tech : HTML5, CSS3, Tailwind, JavaScript ES6, Node.js, ExpressJS\n> Hardware & Systems: Axioo Class Program, Linux System Tuning`, 'text-indigo-400');
+                showToast('Skills stack loaded', 'info');
+            }
+            else if (command === 'band') {
+                printToTerminal(`🎸 [STRELIZIA BAND]\nRole  : Guitarist\nStatus: Active Band Member\nAward : Festival Music Runner-Up`, 'text-amber-400');
+                showToast('Strelizia Band info loaded', 'info');
+            }
+            else if (command === 'matrix') {
+                matrixCanvas.classList.toggle('hidden');
+                if (!matrixCanvas.classList.contains('hidden')) {
+                    startMatrixRain();
+                    printToTerminal(`[SYSTEM] Matrix rain visualizer ENABLED!`, 'text-green-400 font-bold');
+                    showToast('Matrix Rain Mode: ON 🟢', 'success');
+                } else {
+                    printToTerminal(`[SYSTEM] Matrix rain visualizer DISABLED!`, 'text-red-400 font-bold');
+                    showToast('Matrix Rain Mode: OFF 🔴', 'error');
+                }
+            }
+            else if (command === 'clear') {
+                termOutput.innerHTML = '';
+            } 
+            else if (command === 'sudo rm -rf /') {
+                printToTerminal(`⚠️ DANGER: ACCESS DENIED! Nice try hacker, but this Arch Linux system is protected!`, 'text-red-500 font-bold');
+                showToast('Unauthorized access blocked!', 'error');
+            }
+            else if (command !== '') {
+                printToTerminal(`bash: command not found: ${command}. Type 'help' for assistance.`, 'text-red-400');
+            }
+
+            termOutput.scrollTop = termOutput.scrollHeight;
+        });
+
+        function printToTerminal(text, colorClass) {
+            const p = document.createElement('p');
+            p.className = `whitespace-pre-line ${colorClass}`;
+            p.innerText = text;
+            termOutput.appendChild(p);
+        }
+
+        function startMatrixRain() {
+            const ctx = matrixCanvas.getContext('2d');
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%";
+            const fontSize = 14;
+            const columns = matrixCanvas.width / fontSize;
+            const drops = Array(Math.floor(columns)).fill(1);
+
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+                ctx.fillStyle = '#0F0';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars[Math.floor(Math.random() * chars.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            setInterval(draw, 33);
+        }
+
+        // ==========================================
+        // MULTI-TRACK PLAYLIST ENGINE & VISUALIZER
+        // ==========================================
+        const playlist = [
+            {
+                judul: "Tension",
+                artist: "Avenged Sevenfold",
+                file: "lagu-favorit.mp3",
+                story: "An absolute banger track to keep the focus high while ricing Arch Linux or debugging JavaScript code."
+            },
+            {
+                judul: "Figure.09",
+                artist: "Linkin Park",
+                file: "figure-09.mp3",
+                story: "Nu-metal masterclass track from Meteora to boost adrenaline!"
+            },
+            {
+                judul: "Lost",
+                artist: "Bring Me The Horizon",
+                file: "bmth-lost.mp3",
+                story: "High-energy anthem for late-night programming sessions."
+            }
+        ];
+
+        let currentTrackIdx = 0;
+
+        const audio = document.getElementById('audio-player');
+        const btnKaset = document.getElementById('btn-kaset');
+        const rodaKiri = document.getElementById('roda-kiri');
+        const rodaKanan = document.getElementById('roda-kanan');
+        const musicStatus = document.getElementById('music-status');
+        const seekBar = document.getElementById('seek-bar');
+        const volumeBar = document.getElementById('volume-bar');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationTimeEl = document.getElementById('duration-time');
+        const canvas = document.getElementById('visualizer-canvas');
+        const ctx = canvas.getContext('2d');
+
+        const playlistSelect = document.getElementById('playlist-select');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+
+        playlistSelect.innerHTML = '';
+        playlist.forEach((track, idx) => {
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.innerText = `${idx + 1}. ${track.artist} - ${track.judul}`;
+            playlistSelect.appendChild(opt);
+        });
+
+        audio.volume = 1.0;
+
+        let audioCtx, analyser, source, dataArray;
+        let isAudioSetup = false;
+        let isUserSeeking = false;
+
+        function initAudioContext() {
+            if (isAudioSetup) return;
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 64;
+                
+                source = audioCtx.createMediaElementSource(audio);
+                source.connect(analyser);
+                analyser.connect(audioCtx.destination);
+                
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
+                isAudioSetup = true;
+            } catch(e) {
+                console.log("AudioContext initialized");
+            }
+        }
+
+        function loadTrack(index, autoPlay = false) {
+            currentTrackIdx = index;
+            const track = playlist[currentTrackIdx];
+
+            audio.src = track.file;
+            document.getElementById('kaset-text').innerText = `${track.artist} - ${track.judul}`;
+            document.getElementById('lagu-judul').innerText = track.judul;
+            document.getElementById('lagu-artist').innerText = track.artist;
+            document.getElementById('lagu-story').innerText = `"${track.story}"`;
+            playlistSelect.value = currentTrackIdx;
+
+            seekBar.value = 0;
+            currentTimeEl.innerText = "0:00";
+
+            if (autoPlay) {
+                initAudioContext();
+                if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+
+                audio.play().then(() => {
+                    rodaKiri.classList.remove('animation-paused');
+                    rodaKanan.classList.remove('animation-paused');
+                    musicStatus.innerText = "Status: Playing 🔊";
+                    musicStatus.className = "inline-block bg-emerald-950/80 text-emerald-400 text-xs px-3 py-1 rounded-full border border-emerald-800/80 font-mono shadow-[0_0_12px_rgba(16,185,129,0.3)]";
+                    showToast(`Now Playing: ${track.judul}`, 'music');
+                }).catch(() => {
+                    showToast(`Audio file missing: ${track.file}`, 'error');
+                });
+            }
+        }
+
+        playlistSelect.addEventListener('change', (e) => {
+            loadTrack(parseInt(e.target.value), !audio.paused);
+        });
+
+        btnPrev.addEventListener('click', () => {
+            let prevIdx = (currentTrackIdx - 1 + playlist.length) % playlist.length;
+            loadTrack(prevIdx, true);
+        });
+
+        btnNext.addEventListener('click', () => {
+            let nextIdx = (currentTrackIdx + 1) % playlist.length;
+            loadTrack(nextIdx, true);
+        });
+
+        audio.addEventListener('ended', () => {
+            let nextIdx = (currentTrackIdx + 1) % playlist.length;
+            loadTrack(nextIdx, true);
+        });
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth || 300;
+            canvas.height = 64;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function drawVisualizer() {
+            requestAnimationFrame(drawVisualizer);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-hex').trim() || '#6366f1';
+            const barCount = 28;
+            const barWidth = (canvas.width / barCount) - 3;
+            let x = 0;
+
+            if (isAudioSetup && !audio.paused && audio.readyState >= 2) {
+                analyser.getByteFrequencyData(dataArray);
+                for (let i = 0; i < barCount; i++) {
+                    const val = dataArray[i] || 0;
+                    const barHeight = Math.max(4, (val / 255) * canvas.height);
+                    
+                    ctx.fillStyle = primaryColor;
+                    ctx.beginPath();
+                    ctx.roundRect(x, canvas.height - barHeight, barWidth, barHeight, [4, 4, 0, 0]);
+                    ctx.fill();
+                    
+                    x += barWidth + 3;
+                }
+            } else {
+                for (let i = 0; i < barCount; i++) {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                    ctx.beginPath();
+                    ctx.roundRect(x, canvas.height - 4, barWidth, 4, [4, 4, 0, 0]);
+                    ctx.fill();
+                    x += barWidth + 3;
+                }
+            }
+        }
+        drawVisualizer();
+
+        btnKaset.addEventListener('click', () => {
+            initAudioContext();
+
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            if (audio.paused) {
+                audio.play().then(() => {
+                    rodaKiri.classList.remove('animation-paused');
+                    rodaKanan.classList.remove('animation-paused');
+                    musicStatus.innerText = "Status: Playing 🔊";
+                    musicStatus.className = "inline-block bg-emerald-950/80 text-emerald-400 text-xs px-3 py-1 rounded-full border border-emerald-800/80 font-mono shadow-[0_0_12px_rgba(16,185,129,0.3)]";
+                    showToast(`Playing: ${playlist[currentTrackIdx].judul} 🎵`, 'music');
+                }).catch(() => {
+                    showToast(`Audio missing: check ${playlist[currentTrackIdx].file}`, 'error');
+                });
+            } else {
+                audio.pause();
+                rodaKiri.classList.add('animation-paused');
+                rodaKanan.classList.add('animation-paused');
+                musicStatus.innerText = "Status: Paused ⏸️";
+                musicStatus.className = "inline-block bg-black/40 text-gray-400 text-xs px-3 py-1 rounded-full border border-white/10 font-mono";
+                showToast('Music paused', 'info');
+            }
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            if (audio.duration && !isUserSeeking) {
+                seekBar.value = (audio.currentTime / audio.duration) * 100;
+                currentTimeEl.innerText = formatTime(audio.currentTime);
+                durationTimeEl.innerText = formatTime(audio.duration);
+            }
+        });
+
+        seekBar.addEventListener('mousedown', () => { isUserSeeking = true; });
+        seekBar.addEventListener('touchstart', () => { isUserSeeking = true; });
+
+        seekBar.addEventListener('change', () => {
+            isUserSeeking = false;
+            if (audio.duration && isFinite(audio.duration)) {
+                const targetTime = (seekBar.value / 100) * audio.duration;
+                audio.currentTime = targetTime;
+            }
+        });
+
+        volumeBar.addEventListener('input', () => {
+            audio.volume = volumeBar.value / 100;
+        });
+
+        function formatTime(sec) {
+            if (isNaN(sec) || !isFinite(sec)) return "0:00";
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        loadTrack(0, false);
+
+        // FETCH PROJECTS DARI BACKEND APP.JS
+        fetch('http://localhost:3000/api/projects')
+            .then(res => res.json())
+            .then(hasil => {
+                rawProjectsData = hasil.data;
+                const container = document.getElementById('project-container');
+                container.innerHTML = '';
+                hasil.data.forEach(proyek => {
+                    container.innerHTML += `
+                        <div onclick="openModal(${proyek.id})" class="glass-card p-5 rounded-2xl transition duration-300 hover:scale-[1.02] cursor-pointer group">
+                            <h3 class="text-base font-bold text-white group-hover:text-indigo-300 transition tracking-tight">${proyek.judul}</h3>
+                            <p class="text-gray-400 mt-1.5 text-xs leading-relaxed line-clamp-2">${proyek.deskripsi}</p>
+                            <div class="mt-3 flex flex-wrap gap-1.5">
+                                ${proyek.tech.map(t => `<span class="bg-gray-900 dynamic-text-primary text-[9px] font-mono px-2 py-0.5 rounded-full border border-white/10">${t}</span>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+        // FETCH GUESTBOOK DARI BACKEND APP.JS
+        function loadGuestbook() {
+            fetch('http://localhost:3000/api/guestbook')
+                .then(res => res.json())
+                .then(hasil => {
+                    const guestContainer = document.getElementById('guestbook-list');
+                    guestContainer.innerHTML = '';
+                    hasil.data.slice().reverse().forEach(item => {
+                        guestContainer.innerHTML += `
+                            <div class="bg-black/40 p-3 rounded-2xl border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                                <div>
+                                    <span class="dynamic-text-primary font-bold font-mono text-xs">@${item.nama}:</span>
+                                    <span class="text-gray-200 text-xs ml-2">"${item.pesan}"</span>
+                                </div>
+                                <span class="text-[9px] font-mono text-gray-500">ID #${item.id}</span>
+                            </div>
+                        `;
+                    });
+                });
+        }
+        loadGuestbook();
+
+        // POST GUESTBOOK KE BACKEND APP.JS
+        document.getElementById('guestbook-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const namaInput = document.getElementById('input-nama').value;
+            const pesanInput = document.getElementById('input-pesan').value;
+
+            fetch('http://localhost:3000/api/guestbook', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nama: namaInput, pesan: pesanInput })
+            })
+            .then(res => res.json())
+            .then(resData => {
+                if (resData.status === 'success') {
+                    document.getElementById('input-nama').value = '';
+                    document.getElementById('input-pesan').value = '';
+                    loadGuestbook();
+                    showToast(`Message from ${namaInput} sent to server! 🚀`, 'success');
+                }
+            })
+            .catch(() => showToast('Failed to send message to server!', 'error'));
+        });
+    </script>
+</body>
+</html>

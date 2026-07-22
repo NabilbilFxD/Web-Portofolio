@@ -1,0 +1,61 @@
+{
+  "visitors": 84,
+  "projects": [
+    {
+      "id": 1,
+      "judul": "Game BOMSKUY",
+      "deskripsi": "Game interaktif berbasis web menggunakan HTML5 Canvas, CSS3, dan JavaScript murni untuk tugas Client-Side Programming.",
+      "tech": [
+        "HTML5",
+        "CSS3",
+        "JavaScript"
+      ]
+    },
+    {
+      "id": 2,
+      "judul": "X RPL 1 Class Website",
+      "deskripsi": "Website profil kelas lengkap dengan fitur pemutar lagu favorit setiap anak dan galeri interaktif ala Hyprland rice.",
+      "tech": [
+        "TailwindCSS",
+        "Node.js",
+        "ExpressJS"
+      ]
+    },
+    {
+      "id": 3,
+      "judul": "Axioo HW Diagnostic Tool",
+      "deskripsi": "Aplikasi utilitas sistem untuk pengecekan hardware fundamental komputer dan sensor port USB.",
+      "tech": [
+        "JavaScript",
+        "Express API"
+      ]
+    }
+  ],
+  "guestbook": [
+    {
+      "id": 1,
+      "nama": "Nabil",
+      "pesan": "Portofolio Arch Linux riced emang paling keren!"
+    },
+    {
+      "id": 2,
+      "nama": "Admin",
+      "pesan": "Backend ExpressJS online dan berjalan stabil."
+    },
+    {
+      "id": 3,
+      "nama": "satrio",
+      "pesan": "ddd"
+    },
+    {
+      "id": 4,
+      "nama": "dsfe",
+      "pesan": "sdf"
+    },
+    {
+      "id": 5,
+      "nama": "sfef",
+      "pesan": "dsvcds"
+    }
+  ]
+}
